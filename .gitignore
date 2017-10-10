@@ -1,1 +1,20 @@
 
+*.exe
+*.gz
+logs/latest.log
+DiscordConsole.log
+commands.yml
+world/
+world_nether/
+world_the_end/
+spigot-1.12.2.jar
+usercache.json
+wepif.yml
+plugins/Skript/OldSkriptHolding/
+plugins/Skript/variables.csv
+plugins/*.jar
+plugins/Essentials/userdata/
+plugins/GriefPreventionData/PlayerData/
+plugins/GriefPreventionData/Logs/
+plugins/Multiverse-Inventories/players/
+plugins/Skript/backups/
