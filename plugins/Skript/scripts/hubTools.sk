@@ -198,8 +198,4 @@ on projectile hit:
 on damage:
     if damage cause is fall, or suffocation:
         if {{@hubToolVar}.teleportBallFall.%victim%} is true:
-            cancel event         
-                
-
-        
-    
+            cancel event
