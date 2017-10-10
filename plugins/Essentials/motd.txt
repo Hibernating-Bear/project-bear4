@@ -1,0 +1,11 @@
+&6Welcome, {PLAYER}&6! to &5Project Bear4
+&6Type &c/help&6 for a list of commands.
+&6Type &c/list&6 to see who else is online.
+&b&l***************************************
+
+&eImportant Information About This Server
+&eIt is subject to many restarts, map resets
+&eand changes while it is being developed.
+&9If you find any issues please report them
+&9In the Discord Channel Issue Tracker
+&9by following the link in &c/discord
