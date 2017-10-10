@@ -1,0 +1,163 @@
+options:
+    prefix:<blue>[<light aqua>Freeze<blue>]<light blue>
+    version:1.1
+    freezeVar:freeze
+    freezePerm:freeze
+    
+on load:
+    loop all players:
+        loop-player has permission "{@freezePerm}.admin":
+            send "{@prefix} Freeze v{@version} by Hibernating_Bear" to loop-player
+    
+command /freeze [<text>]:
+    aliases: unfreeze, letitgo, doyouwanttobuildasnowman
+    permission: {@freezePerm}.staff
+    trigger:
+        if argument 1 is not set:
+            send "{@prefix} Correct Usage: <light aqua>/freeze <gold><full username>"
+            send "{@prefix} Remember to use TAB to complete name"
+            stop
+        set {_freeze.continue} to false
+        loop all players:
+            if loop-player is text-arg:
+                set {_freeze.continue} to true
+        
+        if {_freeze.continue} is false:
+            send "{@prefix} Player not found"
+            stop
+        if text-arg is player:
+            send "{@prefix} You can't freeze yourself"
+            stop
+        set {{@freezeVar}.name.%text-arg%} to "1"
+        
+        loop all players:
+            if loop-player has permission "{@freezePerm}.toohot":
+                if loop-player is not player:
+                    if loop-player is text-arg:
+                        send "{@prefix} That player is too hot to freeze"
+                set {{@freezeVar}.name.%loop-player%} to "0"
+                
+            if {{@freezeVar}.name.%loop-player%} is "1":
+                set {_uuid} to loop-player's uuid
+                set {{@freezeVar}.name.%loop-player%} to "0"
+                if {{@freezeVar}.check.%{_uuid}%} is true:
+                    send "{@prefix} %text-arg% un-frozen"
+                    send "{@prefix} You have been un-frozen" to loop-player
+                    set {{@freezeVar}.check.%{_uuid}%} to false
+                else:
+                    send "{@prefix} %text-arg% frozen"
+                    send "{@prefix} You have been frozen" to loop-player
+                    set {{@freezeVar}.messagecheck.%loop-player's uuid%} to true
+                    set {{@freezeVar}.check.%{_uuid}%} to true
+
+on command "/letitgo":
+    player has permission "{@freezePerm}.staff"
+    set {_check} to "All the arguments: %arguments%"
+    if {_check} is "All the arguments: <none>":
+        stop
+    set {_freeze.continue} to false
+    loop all players:
+        if loop-player is arguments:
+            set {_uuid} to loop-player's uuid
+            set {_freeze.continue} to true
+    if {_freeze.continue} is false:
+        stop
+    if {{@freezeVar}.check.%{_uuid}%} is true:
+        broadcast "{@prefix} <gold>%player% <light blue>started to sing \nLet It Go while un-freezing <gold>%arguments% <light blue>"
+    else:
+        broadcast "{@prefix} <gold>%player% <light blue>started to sing \nLet It Go while freezing <gold>%arguments% <light blue>"
+
+on command "/doyouwanttobuildasnowman":
+    player has permission "{@freezePerm}.staff"
+    set {_check} to "All the arguments: %arguments%"
+    if {_check} is "All the arguments: <none>":
+        stop
+    set {_freeze.continue} to false
+    loop all players:
+        if loop-player is arguments:
+            set {_uuid} to loop-player's uuid
+            set {_freeze.continue} to true
+    if {_freeze.continue} is false:
+        stop
+    
+    if {{@freezeVar}.check.%{_uuid}%} is true:
+        broadcast "{@prefix} <gold>%player% <light blue>started to build a snowman with \n<gold>%arguments% <light blue>while un-freezing them"
+    else:
+        broadcast "{@prefix} <gold>%player% <light blue>started to build a snowman with \n<gold>%arguments% <light blue>while freezing them"
+  
+
+on any move:
+    if {{@freezeVar}.check.%player's uuid%} is true:
+        cancel event
+        send "{@prefix} Your legs are too cold to move"
+ 
+on left click:
+    if {{@freezeVar}.check.%player's uuid%} is true:
+        cancel event
+        if {{@freezeVar}.messagecheck.%player's uuid%} is true:
+            send "{@prefix} Your arms is too cold to move" to player
+            set {{@freezeVar}.messagecheck.%player's uuid%} to false
+            wait 5 seconds
+            set {{@freezeVar}.messagecheck.%player's uuid%} to true
+on right click:
+    if {{@freezeVar}.check.%player's uuid%} is true:
+        cancel event
+        if {{@freezeVar}.messagecheck.%player's uuid%} is true:
+            send "{@prefix} Your arms is too cold to move" to player
+            set {{@freezeVar}.messagecheck.%player's uuid%} to false
+            wait 5 seconds
+            set {{@freezeVar}.messagecheck.%player's uuid%} to true
+    
+on damage:
+    if {{@freezeVar}.check.%victim's uuid%} is true:
+        cancel event
+    if {{@freezeVar}.check.%attacker's uuid%} is true:
+        cancel event
+        if {{@freezeVar}.messagecheck.%attacker's uuid%} is true:
+            send "{@prefix} You can't attack while frozen" to attacker
+            set {{@freezeVar}.messagecheck.%attacker's uuid%} to false
+            wait 5 seconds
+            set {{@freezeVar}.messagecheck.%attacker's uuid%} to true
+
+                    
+on right click with ender pearl:
+    if {{@freezeVar}.check.%player's uuid%} is true:
+        cancel event
+        send "{@prefix} Your arm is frozen, and you can't throw the pearl"
+
+        
+                    
+on command "/elytra":
+    if {{@freezeVar}.check.%player's uuid%} is true:
+        cancel event
+        send "{@prefix} You can't use the E.L. System while frozen"                    
+                    
+on command "/tpaccept":
+    if {{@freezeVar}.check.%player's uuid%} is true:
+        cancel event
+        send "{@prefix} You can't teleport when you are frozen"
+          
+on command "/tpa":
+    if {{@freezeVar}.check.%player's uuid%} is true:
+        cancel event
+        send "{@prefix} You can't teleport when you are frozen"
+on command "/tp":
+    if {{@freezeVar}.check.%player's uuid%} is true:
+        cancel event
+        send "{@prefix} You can't teleport when you are frozen"
+on command "/warp":
+    if {{@freezeVar}.check.%player's uuid%} is true:
+        cancel event
+        send "{@prefix} You can't teleport when you are frozen"
+on command "/home":
+    if {{@freezeVar}.check.%player's uuid%} is true:
+        cancel event
+        send "{@prefix} You can't teleport when you are frozen"
+on command "/back":
+    if {{@freezeVar}.check.%player's uuid%} is true:
+        cancel event
+        send "{@prefix} You can't teleport when you are frozen"
+on command "/top":
+    if {{@freezeVar}.check.%player's uuid%} is true:
+        cancel event
+        send "{@prefix} You can't teleport when you are frozen"

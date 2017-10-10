@@ -18,3 +18,7 @@ plugins/GriefPreventionData/PlayerData/
 plugins/GriefPreventionData/Logs/
 plugins/Multiverse-Inventories/players/
 plugins/Skript/backups/
+plugins/Umbaska/logs/
+plugins/Umbaska/newlog.txt
+plugins/Umbaska/oldlog.txt
+*.jarx
