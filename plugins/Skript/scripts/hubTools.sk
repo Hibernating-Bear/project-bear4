@@ -1,0 +1,205 @@
+options:
+#Version
+    version: 1.0
+#Variable Name. All variables will use this as their starting point. Also used for Permission nodes
+    hubToolVar: hubtools
+#World Hub Tools Will Operate In
+    worldName:world
+#Hub Tools Message Prefix
+    prefix:<gold>[<lime>HubTools<gold>]<reset>
+#Delay Between Firework Uses (in seconds)
+    fireworkDelay: 10
+#Delay Between Slime Boot Uses (in seconds)
+#Delay for Resistance for Slime Boots, recommend to be 2 or more higher than Delay Value (in seconds)
+    slimeDelay: 10
+    slimeRes: 12
+#Delay Between Supersonic Feather Uses (in seconds)
+#Delay for Resistance for Supersonic Feather, recommend to be 2 or more higher than Delay Value (in seconds)
+    sonicDelay: 10
+    sonicRes: 12
+
+#******Launch Pad Settings*******
+#Launch Pad Block
+    launchPadBlock: iron block
+#Launch Pad Forward and Up Force
+    launchPadForward: 5
+    launchPadUp: 5
+#Zip Pad Block
+    zipPadBlock: gold block
+#Zip Pad Foward Force
+    zipPadForward: 15
+
+#****************Initialise***************# 
+   
+on login:
+    set {{@hubToolVar}.fireworks.%player%} to false
+    set {{@hubToolVar}.slimeBoots.%player%} to false
+    set {{@hubToolVar}.supersonicRun.%player%} to false
+    set {{@hubToolVar}.teleportBall.%player%} to false
+    set {{@hubToolVar}.launched.%player%} to false
+    
+on load:
+    loop all players:
+        if loop-player has permission "{@hubToolVar}.admin":
+            send "{@prefix}<light blue> Hub Tools v{@version} by Hibernating_Bear" to loop-player 
+        set {{@hubToolVar}.fireworks.%loop-player%} to false
+        set {{@hubToolVar}.slimeBoots.%loop-player%} to false
+        set {{@hubToolVar}.supersonicRun.%loop-player%} to false
+        set {{@hubToolVar}.teleportBall.%loop-player%} to false
+        set {{@hubToolVar}.launched.%loop-player%} to false
+
+
+#****************Give Hub Tools***************#
+
+command /givehubtools:
+    trigger:
+        if player is in "{@worldName}":
+            #"%region at player%" contains "hub":
+            #clear the player's inventory
+            #set slot 0 of player to glowing paper named "<light red><bold><italic>World Navigation" with lore "Right Click to open the World Navigation Menu"
+            #set slot 1 of player to glowing eye of ender named "<yellow><bold><italic>Minigames" with lore "Right Click to open the Minigames Menu"
+            #set slot 8 of player to glowing book named "<aqua><bold><italic>Hub Menu" with lore "Right Click to open the Hub Menu"
+            set slot 4 of player to glowing fire charge named "<red><bold><italic>Firework Launcher" with lore "Right Click to Launch a Firework"
+            set slot 5 of player to glowing slimeball named "<lime><bold><italic>Slime Boots" with lore "Right Click to put some Slime on your Boots"
+            set slot 6 of player to glowing feather named "<white><bold><italic>Supersonic Feather" with lore "Right Click to run like the Wind"
+            set slot 3 of player to glowing snowball named "<gold><bold><italic>Teleport Ball" with lore "Throw me to Teleport"
+
+#****************Launch Pads***************#
+                
+on step on {@launchPadBlock}:
+    if player is in "{@worldName}":
+        push player upwards with force {@launchPadUp}
+        push player forwards with force {@launchPadForward} 
+        message "&3Boing!!!"
+        set {{@hubToolVar}.launched.%player%} to true
+        wait 10 seconds
+        if {{@hubToolVar}.launched.%player%} is true:
+            set {{@hubToolVar}.launched.%player%} to false
+        stop
+on damage:
+    if damage cause is fall:
+        if {{@hubToolVar}.launched.%victim%} is true:
+            cancel event
+            set {{@hubToolVar}.launched.%victim%} to false
+on death:
+    set {{@hubToolVar}.launched.%player%} to false
+   
+on step on {@zipPadBlock}:
+    if player is in "{@worldName}":
+        push player forwards with force {@zipPadForward}
+        message "&3Zing!!!"
+        stop
+
+#****************Fireworks***************#
+
+on rightclick holding a fire charge:
+    if player is in "{@worldName}":
+        cancel event
+        if name of held item contains "Firework Launcher":
+            if {{@hubToolVar}.fireworks.%player%} is true:
+                send "{@prefix}<light red><italic>You can't launch Fireworks that fast"
+                stop
+            if {{@hubToolVar}.fireworks.%player%} is false:
+                set helmet of the player to glowing leather helmet named "<red><bold><italic>Safety Hat" with lore "Watch out for falling fireworks"
+                colour the player's helmet red
+                set {{@hubToolVar}.fireworks.%player%} to true
+                add ball large to {_fireworktype::*}
+                add creeper to {_fireworktype::*}
+                add ball to {_fireworktype::*}
+                add star to {_fireworktype::*}
+                add burst to {_fireworktype::*}
+                set {_fwtype} to a random element out of {_fireworktype::*}
+                set {_A} to a random integer between 1 and 6
+                if {_A} is 1:
+                    launch {_fwtype} coloured red and gold fading to yellow at player's location timed 1
+                if {_A} is 2:
+                    launch {_fwtype} coloured light green and gold fading to white at player's location timed 1
+                if {_A} is 3:
+                    launch {_fwtype} coloured red and white fading to blue at player's location timed 1
+                if {_A} is 4:
+                    launch {_fwtype} coloured purple and gold fading to light green at player's location timed 1
+                if {_A} is 5:
+                    launch {_fwtype} coloured magenta and green fading to light blue at player's location timed 1
+                if {_A} is 6:
+                    launch {_fwtype} coloured white and light purple fading to dark red at player's location timed 1
+                wait {@fireworkDelay} seconds
+                if player is in "{@worldName}":
+                    set helmet of the player to air    
+                if player is in "{@worldName}":   
+                    set helmet of the player to air
+                set {{@hubToolVar}.fireworks.%player%} to false
+
+#****************Slime Boots***************#                
+
+on rightclick holding a slimeball:
+    if player is in "{@worldName}":
+        cancel event
+        if name of held item contains "Slime Boots":
+            if {{@hubToolVar}.slimeBoots.%player%} is true:
+                send "{@prefix}<green><italic>Your feet are on Fire, better let them cool off"
+                stop
+            if {{@hubToolVar}.slimeBoots.%player%} is false:
+                set {{@hubToolVar}.slimeBoots.%player%} to true
+                apply jump 10 to player for {@slimeDelay} seconds
+                apply resistance 100 to player for {@slimeRes} seconds
+                set boots of the player to glowing leather boots named "<lime><bold><italic>Slime Boots" with lore "These are Slimey and rather Bouncy"
+                colour the player's boots lime
+                wait {@slimeDelay} seconds  
+                if player is in "{@worldName}":
+                    set boots of the player to air
+                set {{@hubToolVar}.slimeBoots.%player%} to false    
+        
+#****************Supersonic Feather***************#    
+        
+on rightclick holding a feather:
+    if player is in "{@worldName}":
+        cancel event
+        if name of held item contains "Supersonic Feather":
+            if {{@hubToolVar}.supersonicRun.%player%} is true:
+                send "{@prefix}<white><italic>Let your legs cool off first"
+                stop
+            if {{@hubToolVar}.supersonicRun.%player%} is false:
+                set {{@hubToolVar}.supersonicRun.%player%} to true
+                apply speed 50 to player for {@sonicDelay} seconds
+                apply resistance 100 to player for {@sonicRes} seconds
+                set legs of the player to glowing leather legs named "<white><bold><italic>Supersonic Pants" with lore "Run like the Wind with these"
+                colour the player's legs white
+                wait {@sonicDelay} seconds
+                if player is in "{@worldName}":
+                    set legs of the player to air
+                set {{@hubToolVar}.supersonicRun.%player%} to false
+                
+#****************Supersonic Feather***************#         
+
+on rightclick with snowball:
+    player is in "{@worldName}":
+        if name of held item contains "Teleport Ball":
+            set chestplate of the player to glowing leather chestplate named "<gold><bold><italic>Teleport Harness" with lore "Protects you from the dangerous Teleport forces"
+            colour the player's chestplate gold
+            if player's gamemode is survival:
+                give glowing snowball named "<gold><bold><italic>Teleport Ball" with lore "Throw me to Teleport" to the player
+                set {{@hubToolVar}.teleportBall.%player%} to true
+                set {{@hubToolVar}.teleportBallFall.%player%} to true
+            if player's gamemode is creative:
+                set {{@hubToolVar}.teleportBall.%player%} to true
+on projectile hit:
+    shooter is in "{@worldName}":
+        if projectile is a snowball:
+            set {_block} to location of projectile
+            if {{@hubToolVar}.teleportBall.%shooter%} is true:
+                teleport shooter to {_block}
+                if shooter is in "{@worldName}":
+                    set chestplate of the shooter to air
+                    set {{@hubToolVar}.teleportBall.%shooter%} to false
+                    wait 1 second
+                    set {{@hubToolVar}.teleportBallFall.%shooter%} to false
+                    stop
+                
+on damage:
+    if damage cause is fall, or suffocation:
+        if {{@hubToolVar}.teleportBallFall.%victim%} is true:
+            cancel event         
+                
+
+        
+    

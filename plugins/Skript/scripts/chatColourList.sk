@@ -1,0 +1,21 @@
+command /colours:
+    aliases: lcc, colors, chatcolours, chatcolors, textcolours, textcolors
+    trigger:
+        send "<black>& 0 - Black            <blue>& 1 - Blue                <green>& 2 - Green"
+        send "<dark aqua>& 3 - Dark Aqua      <dark red>& 4 - Dark Red          <dark purple>& 5 - Dark Purple"
+        send "<gold>& 6 - Gold             <grey>& <grey>7 - Grey                <dark grey>& 8 - Dark Grey"
+        send "<light blue>& 9 - Light Blue      <light green>& a - Light Green       <light aqua>& b - Aqua"
+        send "<light red>& c - Red              <light purple>& d - Light Purple      <yellow>& e - Yellow"
+        send "<white>& f - White             <gold><bold>& l - Bold           <reset><gold><underline> & n - Underline"
+        send "<gold><italic>& o - Italic            <gold>& k - Magic &k123 <reset><gold>         & m - Strikethrough"
+        send "<gold>& r - Reset"
+        
+command /ip:
+    trigger:
+        send "<gold><bold>Server IP: <dark purple><bold>198.20.109.17"
+        
+command /bosstest:
+    trigger:
+        display bossbar with "hello" to player for 5 seconds
+        wait 5 seconds
+        delete bossbar of player
