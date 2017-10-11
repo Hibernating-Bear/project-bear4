@@ -22,3 +22,4 @@ plugins/Umbaska/logs/
 plugins/Umbaska/newlog.txt
 plugins/Umbaska/oldlog.txt
 *.jarx
+plugins/Umbaska/logs/latest.log

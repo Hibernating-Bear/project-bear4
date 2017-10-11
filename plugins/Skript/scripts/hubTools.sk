@@ -41,7 +41,7 @@ on login:
 on load:
     loop all players:
         if loop-player has permission "{@hubToolVar}.admin":
-            send "{@prefix}<light blue> Hub Tools v{@version} by Hibernating_Bear" to loop-player 
+            send "{@prefix}<light red> Hub Tools v{@version} by Hibernating_Bear" to loop-player 
         set {{@hubToolVar}.fireworks.%loop-player%} to false
         set {{@hubToolVar}.slimeBoots.%loop-player%} to false
         set {{@hubToolVar}.supersonicRun.%loop-player%} to false

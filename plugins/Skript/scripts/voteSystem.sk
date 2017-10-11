@@ -1,16 +1,39 @@
 options:
-    svprefix:<yellow>{<gold>*<yellow>} <light purple>
+    version: 1.0
+    voteSysVar: voteSystem
+    voteSysPerm: votesystem
+    svprefix: <yellow>{<gold>*<yellow>} <light purple>
+    votePrefix: &9[<gold>Vote&9] <reset>
+    
+    totalWorlds: 2
+    
+    worldOneID: world
+    worldOneName: "Survival"
+    
+    worldTwoID: prototype
+    worldTwoName: "Prototype"
+    
+    worldThreeID: world
+    worldThreeName: "Creative"
+    
+    worldFourID: world
+    worldFourName: "Skyblock"
+    
     
 
-on skript start:
-    set {voteSystem.vote.running} to false
-    
+on load:
+    set {{@voteSysVar}.vote.running} to false
+    loop all players:
+        if loop-player has permission "{@voteSysVar}.start.admin":
+            send "{@votePrefix}<light green> Vote System v{@version} by Hibernating_Bear" to loop-player 
+
+        
 command /vote:
     trigger:
-        if {voteSystem.vote.running} is true:
+        if {{@voteSysVar}.vote.running} is true:
             open chest with 1 row named "<blue><bold>Vote Choices" to player
-            format slot 2 of player with wool:5 named "<light green><bold>Vote Yes" with lore "Click to Vote Yes." to close then run "voteforyes %player%"
-            format slot 6 of player with wool:14 named "<light red><bold>Vote No" with lore "Click to Vote No." to close then run "voteforno %player%"
+            format slot 2 of player with lime concrete named "<light green><bold>Vote Yes" with lore "Click to Vote Yes." to close then run "votechoice %player% yes"
+            format slot 6 of player with red concrete named "<light red><bold>Vote No" with lore "Click to Vote No." to close then run "votechoice %player% no"
             stop
         send "<grey>--------------------------------------------------"
         send "<yellow>{<gold>*<yellow>}<yellow>{<gold>*<yellow>}<bold> VOTE FOR THE SERVER <reset><yellow>{<gold>*<yellow>}<yellow>{<gold>*<yellow>}"
@@ -25,316 +48,299 @@ command /vote:
 command /startVote:
     aliases: svote, votestart
     trigger:
-        if {voteSystem.vote.running} is false:
+        if {{@voteSysVar}.vote.running} is false:
             loop all players:
-                set {voteSystem.%player%.vote} to 0
-            if player has permission "vote.start.admin":
-                open chest with 5 row named "<purple><bold>Admin Vote Panel" to player
-                format slot 0 of the player with green stained glass pane named "<green><bold>Survival World" to be unstealable
-                format slot 1 of the player with green stained glass pane named "<green><bold>Survival World" to be unstealable
-                format slot 2 of player with yellow wool named "Survival Day Vote" with lore "Click to Start a Day Vote||in the Survival World." to close then run "adminvoteforday %player% survival"
-                format slot 3 of player with black wool named "Survival Night Vote" with lore "Click to Start a Night Vote||in the Survival World." to close then run "adminvotefornight %player% survival"
-                format slot 4 of the player with green stained glass pane named "<green><bold>Survival World" to be unstealable
-                format slot 5 of player with blaze spawn egg named "Survival Sun Vote" with lore "Click to Start a Sun Vote||in the Survival World." to close then run "adminvoteforsun %player% survival"
-                format slot 6 of player with squid spawn egg named "Survival Rain Vote" with lore "Click to Start a Rain Vote||in the Survival World." to close then run "adminvoteforrain %player% survival"
-                format slot 7 of the player with green stained glass pane named "<green><bold>Survival World" to be unstealable
-                format slot 8 of the player with green stained glass pane named "<green><bold>Survival World" to be unstealable
+                set {{@voteSysVar}.%player%.vote} to 0
+            if player has permission "{@voteSysPerm}.start.admin":
+                set {_worldID.1} to {@worldOneID}
+                set {_worldName.1} to {@worldOneName}   
+                set {_worldID.2} to {@worldTwoID}
+                set {_worldName.2} to {@worldTwoName}
+                set {_worldID.3} to {@worldThreeID}
+                set {_worldName.3} to {@worldThreeName}
+                set {_worldID.4} to {@worldFourID}
+                set {_worldName.4} to {@worldFourName}
+                set {_colour.1} to green
+                set {_colour.2} to yellow
+                set {_colour.3} to red
+                set {_colour.4} to indigo
                 
-                format slot 9 of the player with yellow stained glass pane named "<yellow><bold>Digger World" to be unstealable
-                format slot 10 of the player with yellow stained glass pane named "<yellow><bold>Digger World" to be unstealable
-                format slot 11 of player with wolf spawn egg named "Digger Day Vote" with lore "Click to Start a Day Vote||in the Digger World." to close then run "adminvoteforday %player% digger"
-                format slot 12 of player with enderman spawn egg named "Digger Night Vote" with lore "Click to Start a Night Vote||in the Digger World." to close then run "adminvotefornight %player% digger"
-                format slot 13 of the player with yellow stained glass pane named "<yellow><bold>Digger World" to be unstealable
-                format slot 14 of player with blaze spawn egg named "Digger Sun Vote" with lore "Click to Start a Sun Vote||in the Digger World." to close then run "adminvoteforsun %player% digger"
-                format slot 15 of player with squid spawn egg named "Digger Rain Vote" with lore "Click to Start a Rain Vote||in the Digger World." to close then run "adminvoteforrain %player% digger"
-                format slot 16 of the player with yellow stained glass pane named "<yellow><bold>Digger World" to be unstealable
-                format slot 17 of the player with yellow stained glass pane named "<yellow><bold>Digger World" to be unstealable
                 
-                format slot 18 of the player with red stained glass pane named "<light red><bold>Creative World" to be unstealable
-                format slot 19 of the player with red stained glass pane named "<light red><bold>Creative World" to be unstealable
-                format slot 20 of player with wolf spawn egg named "Creative Day Vote" with lore "Click to Start a Day Vote||in the Creative World." to close then run "adminvoteforday %player% creative"
-                format slot 21 of player with enderman spawn egg named "Creative Night Vote" with lore "Click to Start a Night Vote||in the Creative World." to close then run "adminvotefornight %player% creative"
-                format slot 22 of the player with red stained glass pane named "<light red><bold>Creative World" to be unstealable
-                format slot 23 of player with blaze spawn egg named "Creative Sun Vote" with lore "Click to Start a Sun Vote||in the Creative World." to close then run "adminvoteforsun %player% creative"
-                format slot 24 of player with squid spawn egg named "Creative Rain Vote" with lore "Click to Start a Rain Vote||in the Creative World." to close then run "adminvoteforrain %player% creative"
-                format slot 25 of the player with red stained glass pane named "<light red><bold>Creative World" to be unstealable
-                format slot 26 of the player with red stained glass pane named "<light red><bold>Creative World" to be unstealable  
+                set {_votePanelRows} to sum(floor({@totalWorlds}), 1)
+                open chest with {_votePanelRows} row named "<purple><bold>Admin Vote Panel" to player
+                loop {@totalWorlds} times:
 
-                format slot 27 of the player with light blue stained glass pane named "<light blue><bold>Skyblock World" to be unstealable
-                format slot 28 of the player with light blue stained glass pane named "<light blue><bold>Skyblock World" to be unstealable
-                format slot 29 of player with wolf spawn egg named "Skyblock Day Vote" with lore "Click to Start a Day Vote||in the Skyblock World." to close then run "adminvoteforday %player% skyworld"
-                format slot 30 of player with enderman spawn egg named "Skyblock Night Vote" with lore "Click to Start a Night Vote||in the Skyblock World." to close then run "adminvotefornight %player% skyworld"
-                format slot 31 of the player with light blue stained glass pane named "<light blue><bold>Skyblock World" to be unstealable
-                format slot 32 of player with blaze spawn egg named "Skyblock Sun Vote" with lore "Click to Start a Sun Vote||in the Skyblock World." to close then run "adminvoteforsun %player% skyworld"
-                format slot 33 of player with squid spawn egg named "Skyblock Rain Vote" with lore "Click to Start a Rain Vote||in the Skyblock World." to close then run "adminvoteforrain %player% skyworld"
-                format slot 34 of the player with light blue stained glass pane named "<light blue><bold>Skyblock World" to be unstealable
-                format slot 35 of the player with light blue stained glass pane named "<light blue><bold>Skyblock World" to be unstealable
+                    format slot sum(0,product(loop-number, 9), -9) of the player with black stained glass pane named "<%{_colour.%loop-number%}%><bold>%{_worldName.%loop-number%}% World" to be unstealable
+                    format slot sum(1,product(loop-number, 9), -9) of the player with black stained glass pane named "<%{_colour.%loop-number%}%><bold>%{_worldName.%loop-number%}% World" to be unstealable
+                    format slot sum(2,product(loop-number, 9), -9) of player with white concrete named "<%{_colour.%loop-number%}%><bold>%{_worldName.%loop-number%}% Day Vote" with lore "Click to Start a Day Vote||in the %{_worldName.%loop-number%}% World." to close then run "adminvoteforday %player% %{_worldID.%loop-number%}%"
+                    format slot sum(3,product(loop-number, 9), -9) of player with black concrete named "<%{_colour.%loop-number%}%><bold>%{_worldName.%loop-number%}% Night Vote" with lore "Click to Start a Night Vote||in the %{_worldName.%loop-number%}% World." to close then run "adminvotefornight %player% %{_worldID.%loop-number%}%"
+                    format slot sum(4,product(loop-number, 9), -9) of the player with black stained glass pane named "<%{_colour.%loop-number%}%><bold>%{_worldName.%loop-number%}% World" to be unstealable
+                    format slot sum(5,product(loop-number, 9), -9) of player with yellow concrete named "<%{_colour.%loop-number%}%><bold>%{_worldName.%loop-number%}% Sun Vote" with lore "Click to Start a Sun Vote||in the %{_worldName.%loop-number%}% World." to close then run "adminvoteforsun %player% %{_worldID.%loop-number%}%"
+                    format slot sum(6,product(loop-number, 9), -9) of player with blue concrete named "<%{_colour.%loop-number%}%><bold>%{_worldName.%loop-number%}% Rain Vote" with lore "Click to Start a Rain Vote||in the %{_worldName.%loop-number%}% World." to close then run "adminvoteforrain %player% %{_worldID.%loop-number%}%"
+                    format slot sum(7,product(loop-number, 9), -9) of the player with black stained glass pane named "<%{_colour.%loop-number%}%><bold>%{_worldName.%loop-number%}% World" to be unstealable
+                    format slot sum(8,product(loop-number, 9), -9) of the player with black stained glass pane named "<%{_colour.%loop-number%}%><bold>%{_worldName.%loop-number%}% World" to be unstealable
                 
-                format slot 38 of player with wolf spawn egg named "Start Day Vote" with lore "Click to Start a Day Vote||in the World you are in." to close then run "voteforday %player%"
-                format slot 39 of player with enderman spawn egg named "Start Night Vote" with lore "Click to Start a Night Vote||in the World you are in." to close then run "votefornight %player%"
-                format slot 41 of player with blaze spawn egg named "Start Sun Vote" with lore "Click to Start a Sun Vote||in the World you are in." to close then run "voteforsun %player%"
-                format slot 42 of player with squid spawn egg named "Start Rain Vote" with lore "Click to Start a Rain Vote||in the World you are in." to close then run "voteforrain %player%"
-                
+                format slot sum(0,product({_votePanelRows}, 9), -9) of the player with white stained glass pane named "<white><bold>Current World" to be unstealable
+                format slot sum(1,product({_votePanelRows}, 9), -9) of the player with white stained glass pane named "<white><bold>Current World" to be unstealable                        
+                format slot sum(2,product({_votePanelRows}, 9), -9) of player with white concrete named "<white><bold>Start Day Vote" with lore "Click to Start a Day Vote||in the World you are in." to close then run "voteforday %player%"
+                format slot sum(3,product({_votePanelRows}, 9), -9) of player with black concrete named "<dark grey><bold>Start Night Vote" with lore "Click to Start a Night Vote||in the World you are in." to close then run "votefornight %player%"
+                format slot sum(4,product({_votePanelRows}, 9), -9) of the player with white stained glass pane named "<white><bold>Current World" to be unstealable 
+                format slot sum(5,product({_votePanelRows}, 9), -9) of player with yellow concrete named "<gold><bold>Start Sun Vote" with lore "Click to Start a Sun Vote||in the World you are in." to close then run "voteforsun %player%"
+                format slot sum(6,product({_votePanelRows}, 9), -9) of player with blue concrete named "<indigo><bold>Start Rain Vote" with lore "Click to Start a Rain Vote||in the World you are in." to close then run "voteforrain %player%"
+                format slot sum(7,product({_votePanelRows}, 9), -9) of the player with white stained glass pane named "<white><bold>Current World" to be unstealable 
+                format slot sum(8,product({_votePanelRows}, 9), -9) of the player with white stained glass pane named "<white><bold>Current World" to be unstealable                 
+                    
                 stop
-            if player has permission "vote.start.limited":
+            if player has permission "{@voteSysPerm}.start.limited":
                 open chest with 1 row named "<blue><bold>Vote Panel" to player
-                format slot 2 of player with wolf spawn egg named "Start Day Vote" with lore "Click to Start a Day Vote||in the World you are in." to close then run "voteforday %player%"
-                format slot 3 of player with enderman spawn egg named "Start Night Vote" with lore "Click to Start a Night Vote||in the World you are in." to close then run "votefornight %player%"
-                format slot 5 of player with blaze spawn egg named "Start Sun Vote" with lore "Click to Start a Sun Vote||in the World you are in." to close then run "voteforsun %player%"
-                format slot 6 of player with squid spawn egg named "Start Rain Vote" with lore "Click to Start a Rain Vote||in the World you are in." to close then run "voteforrain %player%"
+                format slot 2 of player with white concrete named "<white><bold>Start Day Vote" with lore "Click to Start a Day Vote||in the World you are in." to close then run "voteforday %player%"
+                format slot 3 of player with black concrete named "<dark grey><bold>Start Night Vote" with lore "Click to Start a Night Vote||in the World you are in." to close then run "votefornight %player%"
+                format slot 5 of player with yellow concrete named "<gold><bold>Start Sun Vote" with lore "Click to Start a Sun Vote||in the World you are in." to close then run "voteforsun %player%"
+                format slot 6 of player with blue concrete named "<indigo><bold>Start Rain Vote" with lore "Click to Start a Rain Vote||in the World you are in." to close then run "voteforrain %player%"
                 stop
             else:
-                send "There is no Vote running at the moment."
+                send "{@votePrefix}<light green>You Don't have Permission to Start Votes"
 
 command /adminvoteforday [<player>] [<world>]:
     trigger:
-        if player-arg has permission "vote.start.admin":
-            set {voteSystem.world.start} to world-arg
-            set {voteSystem.world.skip} to true
+        if player-arg has permission "{@voteSysPerm}.start.admin":
+            set {{@voteSysVar}.world.start} to world-arg
+            set {{@voteSysVar}.world.skip} to true
             make player-arg execute command "/voteforday %argument 1%"
             stop
             
 command /adminvotefornight [<player>] [<world>]:
     trigger:
-        if player-arg has permission "vote.start.admin":
-            set {voteSystem.world.start} to world-arg
-            set {voteSystem.world.skip} to true
+        if player-arg has permission "{@voteSysPerm}.start.admin":
+            set {{@voteSysVar}.world.start} to world-arg
+            set {{@voteSysVar}.world.skip} to true
             make player-arg execute command "/votefornight %argument 1%"
             stop  
             
 command /adminvoteforsun [<player>] [<world>]:
     trigger:
-        if player-arg has permission "vote.start.admin":
-            set {voteSystem.world.start} to world-arg
-            set {voteSystem.world.skip} to true
+        if player-arg has permission "{@voteSysPerm}.start.admin":
+            set {{@voteSysVar}.world.start} to world-arg
+            set {{@voteSysVar}.world.skip} to true
             make player-arg execute command "/voteforsun %argument 1%"
             stop          
             
 command /adminvoteforrain [<player>] [<world>]:
     trigger:
-        if player-arg has permission "vote.start.admin":
-            set {voteSystem.world.start} to world-arg
-            set {voteSystem.world.skip} to true
+        if player-arg has permission "{@voteSysPerm}.start.admin":
+            set {{@voteSysVar}.world.start} to world-arg
+            set {{@voteSysVar}.world.skip} to true
             make player-arg execute command "/voteforrain %argument 1%"
             stop
             
 command /voteforday [<player>]:
     trigger:
         set {_voteSystem.activate} to false
-        if player-arg has permission "vote.start.limited":
+        if player-arg has permission "{@voteSysPerm}.start.limited":
             set {_voteSystem.activate} to true
         if {_voteSystem.activate} is false:
             stop        
         set {_voteSystem.player.start} to player-arg
-        if {voteSystem.world.skip} is false:
-            set {voteSystem.world.start} to player-arg's world
-        set {voteSystem.world.skip} to false
-        if time in {voteSystem.world.start} is between 6:00AM and 5:00PM:
-            send "<light green>You can't start Vote for Day when it is already Day!" to player-arg
+        if {{@voteSysVar}.world.skip} is false:
+            set {{@voteSysVar}.world.start} to player-arg's world
+        set {{@voteSysVar}.world.skip} to false
+        if time in {{@voteSysVar}.world.start} is between 6:00AM and 5:00PM:
+            send "{@votePrefix}<light green>You can't start Vote for Day when it is already Day!" to player-arg
             stop
-        set {voteSystem.vote.for} to 0
-        set {voteSystem.vote.running} to true
-        set {voteSystem.%argument 1%.vote} to 1
+        set {{@voteSysVar}.vote.for} to 0
+        set {{@voteSysVar}.vote.running} to true
+        set {{@voteSysVar}.%argument 1%.vote} to 1
         loop all players:
-            loop-player is in {voteSystem.world.start}:
+            loop-player is in {{@voteSysVar}.world.start}:
                 if {_voteSystemWorldCount} is not set:
                     set {_voteSystemWorldCount} to 0
                 add 1 to {_voteSystemWorldCount}
-        broadcast "<yellow>%{_voteSystem.player.start}% <reset><light green>has started a vote for: " to {voteSystem.world.start}
-        broadcast "<light green>Day in the world: <gold>%{voteSystem.world.start}%<light green>. <light green>Type <gold>/vote <light green>to Vote." to {voteSystem.world.start}
+        broadcast "{@votePrefix}<yellow>%{_voteSystem.player.start}% <reset><light green>has started a vote for: " to {{@voteSysVar}.world.start}
+        broadcast "{@votePrefix}<light green>Day in the world: <gold>%{{@voteSysVar}.world.start}%<light green>. <light green>Type <gold>/vote <light green>to Vote." to {{@voteSysVar}.world.start}
         wait 10 seconds
-        broadcast "<light green>10 seconds left to Vote" to {voteSystem.world.start}
+        broadcast "{@votePrefix}<light green>10 seconds left to Vote" to {{@voteSysVar}.world.start}
         wait 5 seconds
-        broadcast "<light green>5 seconds left to Vote" to {voteSystem.world.start}
+        broadcast "{@votePrefix}<light green>5 seconds left to Vote" to {{@voteSysVar}.world.start}
         wait 5 seconds
         
         loop all players:
-            loop-player is in {voteSystem.world.start}:
+            loop-player is in {{@voteSysVar}.world.start}:
                 if {_voteSystemResult} is not set:
                     set {_voteSystemResult} to 0
-                if {voteSystem.%loop-player%.vote} is 1:
+                if {{@voteSysVar}.%loop-player%.vote} is 1:
                     add 1 to {_voteSystemResult}
         if {_voteSystemResult}/{_voteSystemWorldCount} >0.5:
-            broadcast "<light green>Vote Successful." to {voteSystem.world.start}
-            set the time in {voteSystem.world.start} to 6:00AM
-            set {voteSystem.vote.running} to false
+            broadcast "{@votePrefix}<light green>Vote Successful." to {{@voteSysVar}.world.start}
+            set the time in {{@voteSysVar}.world.start} to 6:00AM
+            set {{@voteSysVar}.vote.running} to false
             stop
         else:
-            broadcast "<light red>Vote Failed." to {voteSystem.world.start}
-            set {voteSystem.vote.running} to false
+            broadcast "{@votePrefix}<light red>Vote Failed." to {{@voteSysVar}.world.start}
+            set {{@voteSysVar}.vote.running} to false
             stop
         
 command /votefornight [<player>]:
     trigger:
         set {_voteSystem.activate} to false
-        if player-arg has permission "vote.start.limited":
+        if player-arg has permission "{@voteSysPerm}.start.limited":
             set {_voteSystem.activate} to true
         if {_voteSystem.activate} is false:
             stop      
         set {_voteSystem.player.start} to player-arg
-        if {voteSystem.world.skip} is false:
-            set {voteSystem.world.start} to player-arg's world
-        set {voteSystem.world.skip} to false
-        if time in {voteSystem.world.start} is between 6:00PM and 5:00AM:
-            send "<light green>You can't start Vote for Night when it is already Night!" to player-arg
+        if {{@voteSysVar}.world.skip} is false:
+            set {{@voteSysVar}.world.start} to player-arg's world
+        set {{@voteSysVar}.world.skip} to false
+        if time in {{@voteSysVar}.world.start} is between 6:00PM and 5:00AM:
+            send "{@votePrefix}<light green>You can't start Vote for Night when it is already Night!" to player-arg
             stop
-        set {voteSystem.vote.for} to 0
-        set {voteSystem.vote.running} to true
-        set {voteSystem.%argument 1%.vote} to 1
+        set {{@voteSysVar}.vote.for} to 0
+        set {{@voteSysVar}.vote.running} to true
+        set {{@voteSysVar}.%argument 1%.vote} to 1
         loop all players:
-            loop-player is in {voteSystem.world.start}:
+            loop-player is in {{@voteSysVar}.world.start}:
                 if {_voteSystemWorldCount} is not set:
                     set {_voteSystemWorldCount} to 0
                 add 1 to {_voteSystemWorldCount}
-        broadcast "<yellow>%{_voteSystem.player.start}% <reset><light green>has started a vote for: " to {voteSystem.world.start}
-        broadcast "<light green>Night in the world: <gold>%{voteSystem.world.start}%<light green>. <light green>Type <gold>/vote <light green>to Vote." to {voteSystem.world.start}
+        broadcast "{@votePrefix}<yellow>%{_voteSystem.player.start}% <reset><light green>has started a vote for: " to {{@voteSysVar}.world.start}
+        broadcast "{@votePrefix}<light green>Night in the world: <gold>%{{@voteSysVar}.world.start}%<light green>. <light green>Type <gold>/vote <light green>to Vote." to {{@voteSysVar}.world.start}
         wait 10 seconds
-        broadcast "<light green>10 seconds left to Vote" to {voteSystem.world.start}
+        broadcast "{@votePrefix}<light green>10 seconds left to Vote" to {{@voteSysVar}.world.start}
         wait 5 seconds
-        broadcast "<light green>5 seconds left to Vote" to {voteSystem.world.start}
+        broadcast "{@votePrefix}<light green>5 seconds left to Vote" to {{@voteSysVar}.world.start}
         wait 5 seconds
         
         loop all players:
-            loop-player is in {voteSystem.world.start}:
+            loop-player is in {{@voteSysVar}.world.start}:
                 if {_voteSystemResult} is not set:
                     set {_voteSystemResult} to 0
-                if {voteSystem.%loop-player%.vote} is 1:
+                if {{@voteSysVar}.%loop-player%.vote} is 1:
                     add 1 to {_voteSystemResult}
         if {_voteSystemResult}/{_voteSystemWorldCount} >0.5:
-            broadcast "<light green>Vote Successful." to {voteSystem.world.start}
-            set the time in {voteSystem.world.start} to 6:00PM
-            set {voteSystem.vote.running} to false
+            broadcast "{@votePrefix}<light green>Vote Successful." to {{@voteSysVar}.world.start}
+            set the time in {{@voteSysVar}.world.start} to 6:00PM
+            set {{@voteSysVar}.vote.running} to false
             stop
         else:
-            broadcast "<light red>Vote Failed." to {voteSystem.world.start}
-            set {voteSystem.vote.running} to false
+            broadcast "{@votePrefix}<light red>Vote Failed." to {{@voteSysVar}.world.start}
+            set {{@voteSysVar}.vote.running} to false
             stop       
 
 command /voteforsun [<player>]:
     trigger:
         set {_voteSystem.activate} to false
-        if player-arg has permission "vote.start.limited":
+        if player-arg has permission "{@voteSysPerm}.start.limited":
             set {_voteSystem.activate} to true
         if {_voteSystem.activate} is false:
             stop          
         set {_voteSystem.player.start} to player-arg
-        if {voteSystem.world.skip} is false:
-            set {voteSystem.world.start} to player-arg's world
-        set {voteSystem.world.skip} to false
-        if weather in {voteSystem.world.start} is sun:
-            send "<light green>You can't start Vote for Sunny weather when it is already Sunny!" to player-arg
+        if {{@voteSysVar}.world.skip} is false:
+            set {{@voteSysVar}.world.start} to player-arg's world
+        set {{@voteSysVar}.world.skip} to false
+        if weather in {{@voteSysVar}.world.start} is sun:
+            send "{@votePrefix}<light green>You can't start Vote for Sunny weather when it is already Sunny!" to player-arg
             stop
-        set {voteSystem.vote.for} to 0
-        set {voteSystem.vote.running} to true
-        set {voteSystem.%argument 1%.vote} to 1
+        set {{@voteSysVar}.vote.for} to 0
+        set {{@voteSysVar}.vote.running} to true
+        set {{@voteSysVar}.%argument 1%.vote} to 1
         loop all players:
-            loop-player is in {voteSystem.world.start}:
+            loop-player is in {{@voteSysVar}.world.start}:
                 if {_voteSystemWorldCount} is not set:
                     set {_voteSystemWorldCount} to 0
                 add 1 to {_voteSystemWorldCount}
-        broadcast "<yellow>%{_voteSystem.player.start}% <reset><light green>has started a vote for: " to {voteSystem.world.start}
-        broadcast "<light green>Sun in the world: <gold>%{voteSystem.world.start}%<light green>. <light green>Type <gold>/vote <light green>to Vote." to {voteSystem.world.start}
+        broadcast "{@votePrefix}<yellow>%{_voteSystem.player.start}% <reset><light green>has started a vote for: " to {{@voteSysVar}.world.start}
+        broadcast "{@votePrefix}<light green>Sun in the world: <gold>%{{@voteSysVar}.world.start}%<light green>. <light green>Type <gold>/vote <light green>to Vote." to {{@voteSysVar}.world.start}
         wait 10 seconds
-        broadcast "<light green>10 seconds left to Vote" to {voteSystem.world.start}
+        broadcast "{@votePrefix}<light green>10 seconds left to Vote" to {{@voteSysVar}.world.start}
         wait 5 seconds
-        broadcast "<light green>5 seconds left to Vote" to {voteSystem.world.start}
+        broadcast "{@votePrefix}<light green>5 seconds left to Vote" to {{@voteSysVar}.world.start}
         wait 5 seconds
         
         loop all players:
-            loop-player is in {voteSystem.world.start}:
+            loop-player is in {{@voteSysVar}.world.start}:
                 if {_voteSystemResult} is not set:
                     set {_voteSystemResult} to 0
-                if {voteSystem.%loop-player%.vote} is 1:
+                if {{@voteSysVar}.%loop-player%.vote} is 1:
                     add 1 to {_voteSystemResult}
         if {_voteSystemResult}/{_voteSystemWorldCount} >0.5:
-            broadcast "<light green>Vote Successful." to {voteSystem.world.start}
-            set the weather in {voteSystem.world.start} to sun
-            set {voteSystem.vote.running} to false
+            broadcast "{@votePrefix}<light green>Vote Successful." to {{@voteSysVar}.world.start}
+            set the weather in {{@voteSysVar}.world.start} to sun
+            set {{@voteSysVar}.vote.running} to false
             stop
         else:
-            broadcast "<light red>Vote Failed." to {voteSystem.world.start}
-            set {voteSystem.vote.running} to false
+            broadcast "{@votePrefix}<light red>Vote Failed." to {{@voteSysVar}.world.start}
+            set {{@voteSysVar}.vote.running} to false
             stop 
             
             
 command /voteforrain [<player>]:
     trigger:
         set {_voteSystem.activate} to false
-        if player-arg has permission "vote.start.limited":
+        if player-arg has permission "{@voteSysPerm}.start.limited":
             set {_voteSystem.activate} to true
         if {_voteSystem.activate} is false:
             stop  
         set {_voteSystem.player.start} to player-arg
-        if {voteSystem.world.skip} is false:
-            set {voteSystem.world.start} to player-arg's world
-        set {voteSystem.world.skip} to false
-        if weather in {voteSystem.world.start} is rain:
-            send "<light green>You can't start Vote for Rainy weather when it is already Raining!" to player-arg
+        if {{@voteSysVar}.world.skip} is false:
+            set {{@voteSysVar}.world.start} to player-arg's world
+        set {{@voteSysVar}.world.skip} to false
+        if weather in {{@voteSysVar}.world.start} is rain:
+            send "{@votePrefix}<light green>You can't start Vote for Rainy weather when it is already Raining!" to player-arg
             stop
-        set {voteSystem.vote.for} to 0
-        set {voteSystem.vote.running} to true
-        set {voteSystem.%argument 1%.vote} to 1
+        set {{@voteSysVar}.vote.for} to 0
+        set {{@voteSysVar}.vote.running} to true
+        set {{@voteSysVar}.%argument 1%.vote} to 1
         loop all players:
-            loop-player is in {voteSystem.world.start}:
+            loop-player is in {{@voteSysVar}.world.start}:
                 if {_voteSystemWorldCount} is not set:
                     set {_voteSystemWorldCount} to 0
                 add 1 to {_voteSystemWorldCount}
-        broadcast "<yellow>%{_voteSystem.player.start}% <reset><light green>has started a vote for: " to {voteSystem.world.start}
-        broadcast "<light green>Rain in the world: <gold>%{voteSystem.world.start}%<light green>. <light green>Type <gold>/vote <light green>to Vote." to {voteSystem.world.start}
+        broadcast "{@votePrefix}<yellow>%{_voteSystem.player.start}% <reset><light green>has started a vote for: " to {{@voteSysVar}.world.start}
+        broadcast "{@votePrefix}<light green>Rain in the world: <gold>%{{@voteSysVar}.world.start}%<light green>. <light green>Type <gold>/vote <light green>to Vote." to {{@voteSysVar}.world.start}
         wait 10 seconds
-        broadcast "<light green>10 seconds left to Vote" to {voteSystem.world.start}
+        broadcast "{@votePrefix}<light green>10 seconds left to Vote" to {{@voteSysVar}.world.start}
         wait 5 seconds
-        broadcast "<light green>5 seconds left to Vote" to {voteSystem.world.start}
+        broadcast "{@votePrefix}<light green>5 seconds left to Vote" to {{@voteSysVar}.world.start}
         wait 5 seconds
         
         loop all players:
-            loop-player is in {voteSystem.world.start}:
+            loop-player is in {{@voteSysVar}.world.start}:
                 if {_voteSystemResult} is not set:
                     set {_voteSystemResult} to 0
-                if {voteSystem.%loop-player%.vote} is 1:
+                if {{@voteSysVar}.%loop-player%.vote} is 1:
                     add 1 to {_voteSystemResult}
         if {_voteSystemResult}/{_voteSystemWorldCount} >0.5:
-            broadcast "<light green>Vote Successful." to {voteSystem.world.start}
-            set the weather in {voteSystem.world.start} to rain
-            set {voteSystem.vote.running} to false
+            broadcast "{@votePrefix}<light green>Vote Successful." to {{@voteSysVar}.world.start}
+            set the weather in {{@voteSysVar}.world.start} to rain
+            set {{@voteSysVar}.vote.running} to false
             stop
         else:
-            broadcast "<light red>Vote Failed." to {voteSystem.world.start}
-            set {voteSystem.vote.running} to false
+            broadcast "{@votePrefix}<light red>Vote Failed." to {{@voteSysVar}.world.start}
+            set {{@voteSysVar}.vote.running} to false
             stop 
             
         
 
-command /voteforyes [<player>]:        
+command /votechoice [<player>] [<text>]:        
     trigger:
-        set {voteSystem.%argument 1%.vote} to 1
-        send "<light green>Vote Counted" to player-arg
+        if text-arg is "yes":
+            set {{@voteSysVar}.%argument 1%.vote} to 1
+        if text-arg is "no":
+            set {{@voteSysVar}.%argument 1%.vote} to 0
+        send "{@votePrefix}<light green>Vote Counted" to player-arg
 
-command /voteforno [<player>]:
-    trigger:
-        set {voteSystem.%argument 1%.vote} to 0
-        send "<light green>Vote Counted" to player-arg
-        
-        
-        
-        
-        
-        
-        
-        
 command /voteSystemTrue:
     trigger:
-        set {voteSystem.running} to true
+        set {{@voteSysVar}.running} to true
         
 command /voteSystemFalse:
     trigger:
-        set {voteSystem.vote.running} to false 
+        set {{@voteSysVar}.vote.running} to false 
 
 command /countWorld:
     trigger:
-        set {voteSystem.world.start} to player's world
+        set {{@voteSysVar}.world.start} to player's world
         loop all players:
-            loop-player is in {voteSystem.world.start}:
+            loop-player is in {{@voteSysVar}.world.start}:
                 if {_WORLDNAMEcount} is not set:
                     set {_WORLDNAMEcount} to 0
                 add 1 to {_WORLDNAMEcount}
