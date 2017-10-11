@@ -101,7 +101,7 @@ DiscordChatChannelColorTranslations: {
 DiscordConsoleChannelLogRefreshRateInSeconds: 5
 DiscordConsoleChannelUsageLog: "DiscordConsole.log"
 DiscordConsoleChannelBlacklistActsAsWhitelist: true
-DiscordConsoleChannelBlacklistedCommands: ["lag"]
+DiscordConsoleChannelBlacklistedCommands: ["lag", "tps", "broadcast"]
 DiscordConsoleChannelDoNotSendPhrasesActsAsWhitelist: false
 DiscordConsoleChannelDoNotSendPhrases: ["Async Chat Thread"]
 DiscordConsoleChannelRegexFilter: ""

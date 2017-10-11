@@ -63,9 +63,9 @@ on command "/letitgo":
     if {_freeze.continue} is false:
         stop
     if {{@freezeVar}.check.%{_uuid}%} is true:
-        broadcast "{@prefix} <gold>%player% <light blue>started to sing \nLet It Go while un-freezing <gold>%arguments% <light blue>"
+        broadcast "{@prefix} <gold>%player% <light blue>started to sing Let It Go while un-freezing <gold>%arguments% <light blue>"
     else:
-        broadcast "{@prefix} <gold>%player% <light blue>started to sing \nLet It Go while freezing <gold>%arguments% <light blue>"
+        broadcast "{@prefix} <gold>%player% <light blue>started to sing Let It Go while freezing <gold>%arguments% <light blue>"
 
 on command "/doyouwanttobuildasnowman":
     player has permission "{@freezePerm}.staff"
@@ -81,9 +81,9 @@ on command "/doyouwanttobuildasnowman":
         stop
     
     if {{@freezeVar}.check.%{_uuid}%} is true:
-        broadcast "{@prefix} <gold>%player% <light blue>started to build a snowman with \n<gold>%arguments% <light blue>while un-freezing them"
+        broadcast "{@prefix} <gold>%player% <light blue>started to build a snowman with <gold>%arguments% <light blue>while un-freezing them"
     else:
-        broadcast "{@prefix} <gold>%player% <light blue>started to build a snowman with \n<gold>%arguments% <light blue>while freezing them"
+        broadcast "{@prefix} <gold>%player% <light blue>started to build a snowman with <gold>%arguments% <light blue>while freezing them"
   
 
 on any move:
